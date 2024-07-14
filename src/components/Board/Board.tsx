@@ -1,22 +1,39 @@
-import styles from './board.module.scss';
-import useFetch from '../../hooks/useFetch';
-import { useMemo } from 'react';
+  import styles from './board.module.scss';
+  import Piece from '../Piece/Piece';
 
-const Board = () => {
-  const fetchOptions = useMemo(() => ({
-    url: 'http://127.0.0.1:5000/create_game',
-    options: {
-      method: 'POST'
+  import useFetch from '../../hooks/useFetch';
+  import { useMemo } from 'react';
+
+  const Board = () => {
+
+    type renderItemType = {
+      color: string,
+      type: string,
+      position: number[]
     }
-  }), []);
 
-  const { data, error, loading } = useFetch(fetchOptions);
+    const renderBoard = (data: renderItemType[]) => {
+      return data.map((item) => {
+        return (
+          <Piece data={item}/>
+        )
+      });
+    }
 
-  console.log(data);
+    const fetchOptions = useMemo(() => ({
+      url: 'http://127.0.0.1:5000/create_game',
+      options: {
+        method: 'POST'
+      }
+    }), []);
 
-  return (
-    <div className={styles.container}></div>
-  )
-};
+    const { data, error, loading } = useFetch(fetchOptions);
 
-export default Board;
+    return (
+      <div className={styles.container}>
+        {data && renderBoard(data)} 
+      </div>
+    )
+  };
+
+  export default Board;

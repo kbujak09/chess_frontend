@@ -1,0 +1,8 @@
+.container {
+  color: white;
+  display: grid;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
+  align-items: center;
+  justify-content: center;
+}
