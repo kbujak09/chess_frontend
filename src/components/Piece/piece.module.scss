@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+}
+.container:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+.pieceImage {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}

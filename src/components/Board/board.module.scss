@@ -1,8 +1,19 @@
 .container {
   color: white;
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   align-items: center;
   justify-content: center;
+  width: 100vw;
+  height: 100vw;
+  box-sizing: border-box;
+  border: 5px solid brown;
+  margin-top: 10vh;
+}
+@media (min-width: 900px) {
+  .container {
+    width: 900px;
+    height: 900px;
+  }
 }
