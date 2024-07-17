@@ -5,10 +5,14 @@
 
   import useFetch from '../../hooks/useFetch';
   import { useEffect, useMemo, useState } from 'react';
-  import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+  import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
   const Board = () => {
     const [pieces, setPieces] = useState<pieceDataType[]>([])
+    const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
+      start: [],
+      end: null
+    })
 
     const renderBoard = (data: pieceDataType[]) => {
       const boardElements = [];
@@ -46,6 +50,11 @@
       }
     }), []);
 
+    const onDragStart = (event: DragStartEvent) => {
+      const { active }: any = event;
+      setDraggedPiece({ start: active.data.current.position, end: null });
+    }
+
     const onDragEnd = (event: DragEndEvent) => {
       const { active, over }: {active: any, over: any} = event;
       if (over) {
@@ -65,7 +74,7 @@
 
     return (
       <div className={styles.container}>
-        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <DndContext collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
           {data && renderBoard(pieces)}
         </DndContext> 
       </div>
