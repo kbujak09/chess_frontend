@@ -41,10 +41,10 @@
             : piece
         )
       )
-    }
+    } 
     
     const fetchOptions = useMemo(() => ({
-      url: 'http://127.0.0.1:5000/create_game',
+      url: 'http://127.0.0.1:5000/api/create_game',
       options: {
         method: 'POST'
       }
@@ -64,6 +64,30 @@
       } 
     };
 
+    const handleSubmit = async () => {
+  
+      const user = {
+        username: 'pablo',
+        email: 'pablo@xyz.com',
+        password: '1234'
+      };
+  
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/save_user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user),
+        });
+  
+        const result = await response.json();
+        console.log('User saved:', result);
+      } catch (error) {
+        console.error('Error saving user:', error);
+      }
+    };
+  
     const { data, error, loading } = useFetch(fetchOptions);
 
     useEffect(() => {

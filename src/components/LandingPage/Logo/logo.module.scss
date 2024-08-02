@@ -1,0 +1,13 @@
+.container {
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  gap: 8px;
+  letter-spacing: 0.6px;
+}
+
+.container > img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+}

@@ -1,0 +1,16 @@
+@import '../../../vars.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  align-self: center;
+  font-size: 18px;
+}
+.link {
+  color: $beige;
+  text-underline-offset: 2.4px;
+  cursor: pointer;
+}
