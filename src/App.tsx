@@ -12,8 +12,8 @@ const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path={'/'} element={user ? null : <LandingPage/>}/>
-        <Route path={'/auth'} element={<Auth/>}/>
+        <Route path={'/'} element={localStorage.token ? <div onClick={() => {localStorage.clear(); window.location.reload()}}>log out</div> : <LandingPage/>}/>
+        <Route path={'/auth'} element={<Auth />}/>
       </Routes>
     </div>
   )

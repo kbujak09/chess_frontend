@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './form.module.scss';
 
 const Form = () => {
+
+  const navigate = useNavigate();
 
   const [formType, setFormType] = useState<string>('login');
 
@@ -26,8 +29,23 @@ const Form = () => {
     console.log(data.message);
   };
 
-  const handleLogin = () => {
-
+  const handleLogin = async () => {
+    const req = await fetch('http://127.0.0.1:5000/api/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        'username': username,
+        'password': password,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    });
+    if (req.status !== 201) {
+      return;
+    }
+    const data = await req.json();
+    localStorage.setItem('token', data.token);
+    navigate('/');
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,6 +69,10 @@ const Form = () => {
       setFormType('login')
     resetState();
   };
+
+  // useEffect(() => {
+  //   navigate('/');
+  // }, [localStorage.token])
 
   return (
     <div className={styles.container}>
