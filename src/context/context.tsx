@@ -1,25 +1,37 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useState } from "react";
 
-type User = {
+type Children = {
+  children: JSX.Element
+};
+
+type UserType = {
   id: string,
   username: string
 }
 
 type UserContextType = {
-  user: User | null,
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: UserType,
+  setUser: React.Dispatch<React.SetStateAction<UserType>>;
 };
 
-export const UserContext = createContext<UserContextType | null>(null);
+const initialUser: UserType = {
+  id: '',
+  username: ''
+};
 
-export const UserContextProvider = ({children}: React.PropsWithChildren<{}>) => {
-  const [user, setUser] = useState<User | null>(null);
+const defaultValue: UserContextType = {
+  user: initialUser,
+  setUser: () => {},
+};
 
-  const value = useMemo(() => ({user, setUser}), [user]);
+export const UserContext = createContext<UserContextType>(defaultValue);
 
+const UserContextProvider = ({children, user, setUser}: Children & UserContextType) => {
   return (
-    <UserContext.Provider value={value}>
+    <UserContext.Provider value={{user, setUser}}>
       {children}
     </UserContext.Provider>
-  );
-};
+  )
+}
+
+export default UserContextProvider;

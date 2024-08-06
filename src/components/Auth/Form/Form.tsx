@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './form.module.scss';
+import { UserContext } from '../../../context/context';
 
 const Form = () => {
 
@@ -12,6 +13,14 @@ const Form = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const userContext = useContext(UserContext);
+
+  if (!userContext) {
+    return null;
+  }
+
+  const { user, setUser } = userContext;
 
   const handleRegister = async () => {
     const req = await fetch('http://127.0.0.1:5000/api/register', {
@@ -44,6 +53,8 @@ const Form = () => {
       return;
     }
     const data = await req.json();
+    setUser(data.user);
+    console.log(data.user)
     localStorage.setItem('token', data.token);
     navigate('/');
   };
