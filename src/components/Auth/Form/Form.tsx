@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './form.module.scss';
 import { UserContext } from '../../../context/context';
+import useFetch from '../../../hooks/useFetch';
 
 const Form = () => {
 
@@ -80,10 +81,6 @@ const Form = () => {
       setFormType('login')
     resetState();
   };
-
-  // useEffect(() => {
-  //   navigate('/');
-  // }, [localStorage.token])
 
   return (
     <div className={styles.container}>

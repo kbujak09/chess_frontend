@@ -1,0 +1,11 @@
+@import '../../vars.scss';
+
+.container {
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.username {
+  text-decoration: underline 1px rgb(255, 255, 255);
+  text-underline-offset: 4px;
+}
