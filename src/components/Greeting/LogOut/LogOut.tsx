@@ -10,7 +10,8 @@ const LogOut = () => {
     localStorage.clear();
     setUser({
       id: '',
-      username: ''
+      username: '',
+      token: ''
     });
   }
   

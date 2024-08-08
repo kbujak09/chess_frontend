@@ -54,9 +54,11 @@ const Form = () => {
       return;
     }
     const data = await req.json();
-    setUser(data.user);
-    console.log(data.user)
-    localStorage.setItem('token', data.token);
+    setUser({
+      token: data.token,
+      username: data.user.username,
+      id: data.user.id
+    });
     navigate('/');
   };
 

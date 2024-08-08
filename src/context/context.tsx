@@ -5,6 +5,7 @@ type Children = {
 };
 
 type UserType = {
+  token: string,
   id: string,
   username: string
 }
@@ -15,6 +16,7 @@ type UserContextType = {
 };
 
 const initialUser: UserType = {
+  token: '',
   id: '',
   username: ''
 };
