@@ -7,15 +7,41 @@
   import { useEffect, useMemo, useState } from 'react';
   import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
-  const Board = () => {
-    const [pieces, setPieces] = useState<pieceDataType[]>([])
+  const Board = ({pieces: initialPieces, isReversed}: {pieces?: pieceDataType[], isReversed?: boolean}) => {
+    const [pieces, setPieces] = useState<pieceDataType[]>(initialPieces || []);
     const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
       start: [],
       end: null
     })
 
+    const movePiece = (startPos: number[], endPos: number[]) => {
+      setPieces(prevPieces => 
+        prevPieces.map(piece => 
+          piece.position[0] === startPos[0] && piece.position[1] === startPos[1]
+            ? {...piece, position: endPos }
+            : piece
+        )
+      )
+    } 
+
     const renderBoard = (data: pieceDataType[]) => {
       const boardElements = [];
+
+      if (isReversed) {
+        for (let x = 0; x < 8; x++) {
+          for (let y = 0; y < 8; y++) {
+            const position = `${x},${y}`;
+            const piece = data.find(item => `${item.position[0]},${item.position[1]}` === position);
+      
+            boardElements.push(
+             <Square key={`${x},${y}`} x={x} y={y} movePiece={movePiece}>
+                {piece ? <Piece data={piece}/> : null}
+             </Square>
+            );
+          }
+        }
+        return boardElements;
+      }
     
       for (let x = 7; x >= 0; x--) {
         for (let y = 0; y < 8; y++) {
@@ -32,23 +58,6 @@
     
       return boardElements;
     };
-
-    const movePiece = (startPos: number[], endPos: number[]) => {
-      setPieces(prevPieces => 
-        prevPieces.map(piece => 
-          piece.position[0] === startPos[0] && piece.position[1] === startPos[1]
-            ? {...piece, position: endPos }
-            : piece
-        )
-      )
-    } 
-    
-    const fetchOptions = useMemo(() => ({
-      url: 'http://127.0.0.1:5000/api/create_game',
-      options: {
-        method: 'POST'
-      }
-    }), []);
 
     const onDragStart = (event: DragStartEvent) => {
       const { active }: any = event;
@@ -87,19 +96,11 @@
         console.error('Error saving user:', error);
       }
     };
-  
-    const { data, error, loading } = useFetch(fetchOptions);
-
-    useEffect(() => {
-      if (data) {
-        setPieces(data);
-      }
-    }, [data]);
 
     return (
       <div className={styles.container}>
         <DndContext collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          {data && renderBoard(pieces)}
+          {initialPieces ? renderBoard(initialPieces) : renderBoard(pieces)}
         </DndContext> 
       </div>
     )
