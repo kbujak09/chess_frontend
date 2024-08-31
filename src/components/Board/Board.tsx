@@ -3,8 +3,7 @@
   import { pieceDataType } from '../../types/types';
   import Square from '../Square/Square';
 
-  import useFetch from '../../hooks/useFetch';
-  import { useEffect, useMemo, useState } from 'react';
+  import { useState } from 'react';
   import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
   const Board = ({pieces: initialPieces, isReversed}: {pieces?: pieceDataType[], isReversed?: boolean}) => {
@@ -82,7 +81,7 @@
       };
   
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/save_user', {
+        const response = await fetch(`${process.env.REACT_APP_API_IP}/api/save_user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +99,7 @@
     return (
       <div className={styles.container}>
         <DndContext collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          {initialPieces ? renderBoard(initialPieces) : renderBoard(pieces)}
+          {!pieces && initialPieces ? renderBoard(initialPieces) : renderBoard(pieces)}
         </DndContext> 
       </div>
     )

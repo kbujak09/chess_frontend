@@ -24,7 +24,7 @@ const Form = () => {
   const { user, setUser } = userContext;
 
   const handleRegister = async () => {
-    const req = await fetch('http://127.0.0.1:5000/api/register', {
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/register`, {
       method: 'POST',
       body: JSON.stringify({
         'username': username,
@@ -40,7 +40,7 @@ const Form = () => {
   };
 
   const handleLogin = async () => {
-    const req = await fetch('http://127.0.0.1:5000/api/login', {
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/login`, {
       method: 'POST',
       body: JSON.stringify({
         'username': username,

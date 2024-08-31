@@ -29,7 +29,7 @@ const Piece = ({data}: pieceProps) => {
     else {
       setResetPiece(false);
     }
-  })
+  }, [isDragging]);
   
   return (
     <div
