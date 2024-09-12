@@ -1,5 +1,18 @@
 .container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 8px 12px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.message {
+  font-size: 14px;
+}
+.loader > div {
+  display: flex;
+  align-items: center;
 }

@@ -6,7 +6,7 @@
   import { useState } from 'react';
   import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
-  const Board = ({pieces: initialPieces, isReversed}: {pieces?: pieceDataType[], isReversed?: boolean}) => {
+  const Board = ({pieces: initialPieces, isReversed = false, isDraggable = true, localColor }: {pieces?: pieceDataType[], isReversed?: boolean, isDraggable?: boolean, localColor: string}) => {
     const [pieces, setPieces] = useState<pieceDataType[]>(initialPieces || []);
     const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
       start: [],
@@ -59,12 +59,18 @@
     };
 
     const onDragStart = (event: DragStartEvent) => {
+      if (!isDraggable) return;
       const { active }: any = event;
+      const pieceColor = active.data.current.color
+      if (localColor !== pieceColor) return;
       setDraggedPiece({ start: active.data.current.position, end: null });
     }
 
     const onDragEnd = (event: DragEndEvent) => {
+      if (!isDraggable) return;
       const { active, over }: {active: any, over: any} = event;
+      const pieceColor = active.data.current.color
+      if (localColor !== pieceColor) return;
       if (over) {
         const start = active.data.current.position;
         const end = over.data.current.position;
@@ -72,29 +78,31 @@
       } 
     };
 
-    const handleSubmit = async () => {
+    // idk why its there :|
+
+    // const handleSubmit = async () => {
   
-      const user = {
-        username: 'pablo',
-        email: 'pablo@xyz.com',
-        password: '1234'
-      };
+    //   const user = {
+    //     username: 'pablo',
+    //     email: 'pablo@xyz.com',
+    //     password: '1234'
+    //   };
   
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_IP}/api/save_user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(user),
-        });
+    //   try {
+    //     const response = await fetch(`${process.env.REACT_APP_API_IP}/api/save_user`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(user),
+    //     });
   
-        const result = await response.json();
-        console.log('User saved:', result);
-      } catch (error) {
-        console.error('Error saving user:', error);
-      }
-    };
+    //     const result = await response.json();
+    //     console.log('User saved:', result);
+    //   } catch (error) {
+    //     console.error('Error saving user:', error);
+    //   }
+    // };
 
     return (
       <div className={styles.container}>

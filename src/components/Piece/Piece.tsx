@@ -16,7 +16,8 @@ const Piece = ({data}: pieceProps) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `${data.position[0]},${data.position[1]}`,
     data: {
-      position: data.position
+      position: data.position,
+      color: data.color
     }
   })
 

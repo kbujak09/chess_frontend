@@ -84,6 +84,8 @@ const Form = () => {
     resetState();
   };
 
+  console.log(username)
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
