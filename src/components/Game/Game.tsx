@@ -8,13 +8,23 @@ import Player from './Player/Player';
 
 import { socket } from '../../socket';
 
+type Player = {
+  id: string;
+  username: string;
+};
+
+type Players = {
+  white?: Player;
+  black?: Player;
+};
+
 const Game = () => {
   const pathname = useLocation().pathname.split('/');
   const id = pathname[pathname.length - 1];
 
   const [localColor, setLocalColor] = useState('');
   const [board, setBoard] = useState([]);
-  const [players, setPlayers] = useState({});
+  const [players, setPlayers] = useState<Players>({});
   const [gameStarted, setGameStarted] = useState(false);
 
   const {data, error, loading} = useFetch({
@@ -43,8 +53,14 @@ const Game = () => {
     joinRoom(id);
 
     socket.on('playerJoined', (player) => {
-      console.log(players)
-    })
+      setPlayers(players => ({
+        ...players,
+        black: {
+          id: player.id,
+          username: player.username
+        } 
+      }));
+    });
 
     return () => {
       socket.off('playerJoined');
@@ -56,16 +72,16 @@ const Game = () => {
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {data !== null ? (
+        {data !== null && (players.black !== undefined && players.white !== undefined) ? (
           localColor === 'white' ? (
             <>
-              <Player data={data.players.black} />
+              <Player data={players.black} />
               <Board pieces={data.board} isDraggable={gameStarted ? true : false} localColor='white'/>
               <Player data={data.players.white} />
             </>
           ) : (
             <>
-              <Player data={data.players.white} />
+              <Player data={players.white} />
               <Board pieces={data.board} isReversed={true} isDraggable={gameStarted ? true : false} localColor='black'/>
               <Player data={data.players.black} />
             </>
