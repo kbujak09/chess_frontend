@@ -6,19 +6,22 @@ import Timer from '../Timer/Times';
 
 type playerPropsType = {
   data: {
-    username: string,
-    id?: string
-  }
+    username: string | null,
+    id?: string | null,
+    color?: string,
+    time: number | null,
+  },
+  isActive: boolean | null
 }
 
-const Player = ({data}: playerPropsType) => {
+const Player = ({data, isActive}: playerPropsType) => {
   return (
     <div className={styles.container}>
       <div className={styles.username}>
         {data.username ? data.username : <Search/>}
       </div>
       <div className={styles.timer}>
-        <Timer time={300} isActive={false} onTimeout={() => {}}/>
+        {data.time && <Timer time={data.time} isActive={isActive ? true : false} onTimeout={() => {}}/>}
       </div>
     </div>
   );

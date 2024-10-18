@@ -15,7 +15,6 @@ const GameCreator = ({minutes, increment}: gameCreatorPropsType) => {
   const navigate = useNavigate();
 
   const { user } = useContext(UserContext);
-  const colors = ['white', 'black'];
 
   const getType = (): string => {
     if (minutes < 3) {
@@ -27,14 +26,10 @@ const GameCreator = ({minutes, increment}: gameCreatorPropsType) => {
     return 'rapid';
   }
 
-  const getColor = (): string => {
-    const randomNumber = Math.floor(Math.random() * colors.length);
-    return colors[randomNumber];
-  }
-
   const handleClick = async () => {
+    const initialTime = minutes * 60;
     const gameId = uuidv4();
-    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/game`, {
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,11 +37,13 @@ const GameCreator = ({minutes, increment}: gameCreatorPropsType) => {
       body: JSON.stringify({
         playerId: user.id,
         playerUsername: user.username,
-        gameId: gameId
+        gameId: gameId,
+        initialTime: initialTime,
+        increment: increment ? increment : 0
       })
     });
     if (req.ok) {
-      return navigate(`/game/${gameId}`);
+      return navigate(`/games/${gameId}`);
     }
 
     return;

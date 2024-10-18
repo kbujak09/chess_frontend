@@ -5,7 +5,7 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import Auth from "./components/Auth/Auth";
 import UserContextProvider from "./context/context";
 import HomePage from "./components/HomePage/HomePage";
-import Game from "./components/Game/Game";
+import GameWrapper from "./components/GameWrapper/GameWrapper";
 
 const App = () => {
 
@@ -36,7 +36,7 @@ const App = () => {
         <Routes>
           <Route path={'/'} element={user.id && user.username && user.token ? <HomePage/> : <LandingPage/>}/>
           <Route path={'/auth'} element={<Auth />}/>
-          <Route path={`/game/:gameId`} element={<Game />}/>
+          <Route path={`/games/:gameId`} element={<GameWrapper />}/>
         </Routes>
       </div>
     </UserContextProvider>

@@ -7,6 +7,9 @@
   justify-content: center;
   box-sizing: border-box;
 }
+.locked {
+  opacity: 0.3;
+}
 @media (min-width: 900px) {
   .container {
     width: 900px;

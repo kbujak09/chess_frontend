@@ -17,20 +17,18 @@ const ActiveGames = () => {
   }
 
   const getOpenGames = async () => {
-    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/open_games?userId=${localStorage.userId}`)
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games?status=open&userId=${localStorage.userId}`)
     
     if (!req.ok) {
       return;
     };
 
     const data = await req.json();
-    console.log(data)
     setGames(data);
   };
 
   useEffect(() => {
     getOpenGames();
-    console.log(games)
   }, []);
 
   return (
@@ -41,7 +39,7 @@ const ActiveGames = () => {
             if (game.players.white.id !== localStorage.userId && game.players.black.id !== localStorage.userId) {
               return (
                 <>
-                  <div className={styles.game} onClick={() => navigate(`/game/${game._id}`)}>game</div>
+                  <div className={styles.game} onClick={() => navigate(`/games/${game._id}`)}>game</div>
                 </>
               )
             }
