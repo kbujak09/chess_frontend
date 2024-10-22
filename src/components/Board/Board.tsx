@@ -4,8 +4,11 @@
   import Square from '../Square/Square';
   import { socket } from '../../socket';
 
-  import { useState, Dispatch, SetStateAction, useEffect, useCallback } from 'react';
+  import { useState, Dispatch, SetStateAction, useEffect } from 'react';
   import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
+
+  const moveSelf = require('../../assets/sounds/move-self.mp3');
+  const moveEnemy = require('../../assets/sounds/move-opponent.mp3');
 
   type BoardPropsType = {
     pieces?: pieceDataType[], 
@@ -40,7 +43,24 @@
       }
     }
 
-    const movePiece = (startPos: number[], endPos: number[]) => {
+    const movePiece = async (startPos: number[], endPos: number[]) => {
+      const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/moves`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          moveData: {
+            start: startPos,
+            end: endPos
+          }
+        })
+      });
+
+      const data = await req.json();
+
+      console.log(data)
+      
       setPieces(prevPieces => 
         prevPieces.map(piece => 
           piece.position[0] === startPos[0] && piece.position[1] === startPos[1]
@@ -105,6 +125,7 @@
       if (over) {
         const start = active.data.current.position;
         const end = over.data.current.position;
+        if (start[0] === end[0] && start[1] === end[1]) return;
         movePiece(start, end);
         emitMove(start, end);
         changeTurn();

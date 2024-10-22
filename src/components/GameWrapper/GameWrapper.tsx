@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import Game from './Game/Game';
-const gameStartAudio = require('../../assets/game-start.mp3');
+const gameStartAudio = require('../../assets/sounds/game-start.mp3');
 
 type PlayerType = {
   id: string | null,
@@ -78,7 +78,7 @@ const GameWrapper = () => {
 
         if (data) {
           setPlayers(data.players);
-          setBoard(data.board);
+          setBoard(data.board.positions);
           setGameStatus(data.status);
           findLocalColor(data.players);
           setTurn(data.current_turn);
