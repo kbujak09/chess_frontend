@@ -37,7 +37,7 @@ const Piece = ({data}: pieceProps) => {
       ref={setNodeRef}
       style={{
         transform: resetPiece ? 'none' : `translate3d(${transform?.x}px, ${transform?.y}px, 0) ${isDragging ? 'scale(1.05)' : ''}`,
-        zIndex: 1000,
+        zIndex: isDragging ? 9999 : 1,
       }}
       {...listeners}
       {...attributes}

@@ -31,17 +31,16 @@ type GameProps = {
   setWhiteTimerOn: Dispatch<SetStateAction<boolean>>,
   setBlackTimerOn: Dispatch<SetStateAction<boolean>>,
   turn: string,
-  setTurn: Dispatch<SetStateAction<string>>
+  setTurn: Dispatch<SetStateAction<string>>,
+  increment: number,
+  setPlayerTime: (color: 'black'|'white') => void
 }
 
-const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn}: GameProps) => {
+const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayerTime}: GameProps) => {
   
   function handlePlayerJoined(data: PlayerType) {
-    console.log(players)
     setPlayers((prevPlayers: any) => {
-      console.log(data, prevPlayers)
       if (prevPlayers.white.id === data.id || prevPlayers.black.id === data.id) {
-        console.log('good')
         return prevPlayers;
       }
 
@@ -61,7 +60,6 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
 
   const joinRoomRequest = async () => {
     socket.emit('join', { 'id': localStorage.userId, 'username': localStorage.username, 'room': gameId });
-    console.log('join request')
 
     if (players.white.id === localStorage.userId || players.black.id === localStorage.userId) {
       return;
@@ -107,6 +105,8 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           turn={turn}  
           setTurn={setTurn}
           gameId={gameId}
+          increment={increment}
+          setPlayerTime={setPlayerTime}
         />
         <Player data={players.white} isActive={whiteTimerOn}/> 
       </>
@@ -125,6 +125,8 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           turn={turn}
           setTurn={setTurn} 
           gameId={gameId} 
+          increment={increment}
+          setPlayerTime={setPlayerTime}
         />
         <Player data={players.black} isActive={blackTimerOn}/> 
       </>

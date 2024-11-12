@@ -1,5 +1,6 @@
 export type pieceDataType = {
   color: string,
   type: string,
-  position: number[]
+  position: number[],
+  possible_moves: number[][]
 }

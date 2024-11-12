@@ -11,7 +11,7 @@ type playerPropsType = {
     color?: string,
     time: number | null,
   },
-  isActive: boolean | null
+  isActive: boolean | null,
 }
 
 const Player = ({data, isActive}: playerPropsType) => {

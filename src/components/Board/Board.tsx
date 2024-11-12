@@ -7,8 +7,11 @@
   import { useState, Dispatch, SetStateAction, useEffect } from 'react';
   import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
-  const moveSelf = require('../../assets/sounds/move-self.mp3');
-  const moveEnemy = require('../../assets/sounds/move-opponent.mp3');
+  const moveSelfSound = require('../../assets/sounds/move-self.mp3');
+  const moveEnemySound = require('../../assets/sounds/move-opponent.mp3');
+  const takeSound = require('../../assets/sounds/capture.mp3');
+  const castleSound = require('../../assets/sounds/castle.mp3');
+  const checkSound = require('../../assets/sounds/move-check.mp3');
 
   type BoardPropsType = {
     pieces?: pieceDataType[], 
@@ -21,14 +24,17 @@
     setWhiteTimerOn: Dispatch<SetStateAction<boolean>>,
     turn: string,
     setTurn: Dispatch<SetStateAction<string>>,
-    gameId: string
+    gameId: string,
+    increment: number,
+    setPlayerTime: (color: 'black'|'white') => void
   }
 
-  const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, localColor, isActive, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, gameId}: BoardPropsType) => {
+  const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, localColor, isActive, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, gameId, increment, setPlayerTime}: BoardPropsType) => {
     const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
       start: [],
       end: null
-    })
+    });
+    const [isMoving, setIsMoving] = useState(false);
 
     const changeTurn = () => {
       if (turn === 'white') {
@@ -44,7 +50,21 @@
     }
 
     const movePiece = async (startPos: number[], endPos: number[]) => {
-      const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/moves`, {
+      const oldPieces: any = pieces;
+      if (pieces) {
+        setIsMoving(true);
+        setPieces(prevPieces => {
+          return prevPieces.map(piece => {
+            if (piece.position[0] === startPos[0] && piece.position[1] === startPos[1]) {
+              return { ...piece, position: endPos };
+            }
+            return piece;
+          });
+        });
+      }
+
+      let req;
+      req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/moves`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,21 +79,19 @@
 
       const data = await req.json();
 
-      console.log(data)
-      
-      setPieces(prevPieces => 
-        prevPieces.map(piece => 
-          piece.position[0] === startPos[0] && piece.position[1] === startPos[1]
-            ? {...piece, position: endPos }
-            : piece
-        )
-      )
-    } 
+      if (data.status) {
+        setPieces(data.board);
+        changeTurn();
+        emitMove(startPos, endPos, data.type, data.gameStatus, data.board);
+      } 
+      else {
+        setPieces(oldPieces);
+      }
 
-    const emitMove = (startPos: number[], endPos: number[]) => {
-      const cords = {position: {start: startPos, end: endPos}, userId: localStorage.userId, room: gameId};
-      socket.emit('move', cords);
-    }
+      setIsMoving(false);
+
+      return {'status': data.status, 'sound': data.type ? data.type : 'enemyMove'};
+    } 
 
     const renderBoard = (data: pieceDataType[]) => {
       const boardElements = [];
@@ -117,7 +135,7 @@
       if (localColor !== pieceColor) return;
       setDraggedPiece({ start: active.data.current.position, end: null });
     }
-    const onDragEnd = (event: DragEndEvent) => {
+    const onDragEnd = async (event: DragEndEvent) => {
       if (!isDraggable) return;
       const { active, over }: {active: any, over: any} = event;
       const pieceColor = active.data.current.color
@@ -126,16 +144,55 @@
         const start = active.data.current.position;
         const end = over.data.current.position;
         if (start[0] === end[0] && start[1] === end[1]) return;
-        movePiece(start, end);
-        emitMove(start, end);
-        changeTurn();
+        const move = await movePiece(start, end);
+        if (move.status) {
+          playMoveSound(move.sound);
+        }
       } 
     };
 
-    const getEnemyMove = (data: any) => {
-        if (data.userId === localStorage.userId) return;
-        movePiece(data.pos.start, data.pos.end);
-        changeTurn();
+    const emitMove = (startPos: number[], endPos: number[], type: string, gameStatus: string, pieces: pieceDataType[] | undefined,) => {
+      const data = {
+        position: {start: startPos, end: endPos},
+        userId: localStorage.userId, 
+        room: gameId,
+        type: type, 
+        gameStatus: gameStatus, 
+        board: pieces
+      };
+      socket.emit('move', data);
+    }
+
+    const getEnemyMove = async (data: any) => {
+      if (data.userId === localStorage.userId) return;
+      setPieces(data.board);
+      changeTurn();
+      playMoveSound(data.type);
+    }
+
+    function playMoveSound (type: 'move'|'enemyMove'|'castle'|'take'|'check') {
+      switch (type) {
+        case 'move':
+          const localMove = new Audio(moveSelfSound);
+          localMove.play();
+          break;
+        case 'enemyMove':
+          const enemyMove = new Audio(moveEnemySound);
+          enemyMove.play();
+          break;
+        case 'take':
+          const take = new Audio(takeSound);
+          take.play();
+          break;
+        case 'castle':
+          const castle = new Audio(castleSound);
+          castle.play();
+          break;
+        case 'check':
+          const check = new Audio(checkSound);
+          check.play();
+          break;
+      }
     }
 
     useEffect(() => {
@@ -144,7 +201,6 @@
         socket.off('enemyMoved', getEnemyMove);
       }
     });
-
 
     return (
       <div className={`${styles.container} ${!isActive ? styles.locked : null}`}>

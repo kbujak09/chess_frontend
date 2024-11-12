@@ -5,7 +5,7 @@ import styles from './timer.module.scss';
 type timerPropsType = {
   time: number,
   isActive: boolean,
-  onTimeout: () => void
+  onTimeout: () => void,
 }
 
 const Timer = ({ time, isActive, onTimeout }: timerPropsType) => {
@@ -32,7 +32,7 @@ const Timer = ({ time, isActive, onTimeout }: timerPropsType) => {
         clearInterval(interval);
       }
     };
-  }, [isActive, onTimeout]);
+  }, [isActive, onTimeout ]);
 
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);

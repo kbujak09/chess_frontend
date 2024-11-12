@@ -34,6 +34,8 @@ const GameWrapper = () => {
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
   const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
 
+  const [increment, setIncrement] = useState<number>(0);
+
   const [turn, setTurn] = useState<string>('');
 
   const findLocalColor = (players: PlayerType[]) => {
@@ -44,7 +46,6 @@ const GameWrapper = () => {
     }
     for (let [key, values] of Object.entries(players)) {
       if (!values.id && values.id !== localStorage.userId) {
-        console.log(key)
         return setLocalColor(key);
       }
     }
@@ -62,6 +63,22 @@ const GameWrapper = () => {
     const data = await req.json();
 
     return data.message;
+  }
+
+  const setPlayerTime = (playerColor: 'white'|'black') => {
+    setPlayers(prevPlayers => {
+      const updatedPlayer = prevPlayers[playerColor];
+
+      const updatedTime = (updatedPlayer.time ?? 0) + increment;
+
+      return {
+        ...prevPlayers,
+        [playerColor]: {
+          ...updatedPlayer,
+          time: updatedTime
+        }
+      };
+    });
   }
 
   // fetch initial data and set states
@@ -82,6 +99,7 @@ const GameWrapper = () => {
           setGameStatus(data.status);
           findLocalColor(data.players);
           setTurn(data.current_turn);
+          setIncrement(data.increment);
         }
       }
       fetchData();
@@ -135,6 +153,8 @@ const GameWrapper = () => {
         setBlackTimerOn={setBlackTimerOn}
         setTurn={setTurn}
         turn={turn}
+        increment={increment}
+        setPlayerTime={setPlayerTime}
       />}
     </div>
   );
