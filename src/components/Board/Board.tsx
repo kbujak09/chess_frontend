@@ -163,7 +163,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     } 
   };
 
-  const emitMove = (startPos: number[], endPos: number[], type: string, gameStatus: string, pieces: pieceDataType[] | undefined, players: any) => {
+  const emitMove = (startPos: number[], endPos: number[], type: string, gameStatus: string, pieces: pieceDataType[] | undefined, players: PlayersType) => {
     const data = {
       position: {start: startPos, end: endPos},
       userId: localStorage.userId, 
@@ -177,10 +177,12 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
   }
 
   const getEnemyMove = async (data: any) => {
+    console.log(data)
     if (data.userId === localStorage.userId) return;
     setPieces(data.board);
     changeTurn();
     playMoveSound(data.type);
+    setPlayersTime(data.players)
   }
 
   function playMoveSound (type: 'move'|'enemyMove'|'castle'|'take'|'check') {

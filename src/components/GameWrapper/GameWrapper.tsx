@@ -66,7 +66,7 @@ const GameWrapper = () => {
   }
 
   const setPlayersTime = (data: PlayersType) => {
-    console.log(players, data)
+    console.log('sync timers')
     setPlayers(prevPlayers => {
       return {
         white: {
@@ -109,11 +109,6 @@ const GameWrapper = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   return () => {
-
-  //   }
-  // }, []);
 
   // start the game when both players join
   useEffect(() => {
