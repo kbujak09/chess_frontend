@@ -12,7 +12,7 @@ type PlayerType = {
   time: number | null
 };
 
-type PlayersType = {
+export type PlayersType = {
   white: PlayerType,
   black: PlayerType
 }
@@ -65,19 +65,19 @@ const GameWrapper = () => {
     return data.message;
   }
 
-  const setPlayerTime = (playerColor: 'white'|'black') => {
+  const setPlayersTime = (data: PlayersType) => {
+    console.log(players, data)
     setPlayers(prevPlayers => {
-      const updatedPlayer = prevPlayers[playerColor];
-
-      const updatedTime = (updatedPlayer.time ?? 0) + increment;
-
       return {
-        ...prevPlayers,
-        [playerColor]: {
-          ...updatedPlayer,
-          time: updatedTime
+        white: {
+          ...prevPlayers.white,
+          time: data.white.time
+        },
+        black: {
+          ...prevPlayers.black,
+          time: data.black.time
         }
-      };
+      }
     });
   }
 
@@ -133,7 +133,7 @@ const GameWrapper = () => {
         }, 1000);
       }
     }
-  }, [players])
+  }, [players.white.id, players.black.id])
 
   return (
     <div className={styles.container}>
@@ -154,7 +154,7 @@ const GameWrapper = () => {
         setTurn={setTurn}
         turn={turn}
         increment={increment}
-        setPlayerTime={setPlayerTime}
+        setPlayersTime={setPlayersTime}
       />}
     </div>
   );

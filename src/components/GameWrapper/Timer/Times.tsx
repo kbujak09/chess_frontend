@@ -12,6 +12,10 @@ const Timer = ({ time, isActive, onTimeout }: timerPropsType) => {
   const [seconds, setSeconds] = useState<number>(time);
 
   useEffect(() => {
+    setSeconds(time);
+  }, [time]);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
 
     if (isActive) {

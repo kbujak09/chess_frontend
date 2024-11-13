@@ -33,10 +33,10 @@ type GameProps = {
   turn: string,
   setTurn: Dispatch<SetStateAction<string>>,
   increment: number,
-  setPlayerTime: (color: 'black'|'white') => void
+  setPlayersTime: (data: PlayersType) => void
 }
 
-const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayerTime}: GameProps) => {
+const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime}: GameProps) => {
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {
@@ -106,7 +106,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           setTurn={setTurn}
           gameId={gameId}
           increment={increment}
-          setPlayerTime={setPlayerTime}
+          setPlayersTime={setPlayersTime}
         />
         <Player data={players.white} isActive={whiteTimerOn}/> 
       </>
@@ -126,7 +126,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           setTurn={setTurn} 
           gameId={gameId} 
           increment={increment}
-          setPlayerTime={setPlayerTime}
+          setPlayersTime={setPlayersTime}
         />
         <Player data={players.black} isActive={blackTimerOn}/> 
       </>
