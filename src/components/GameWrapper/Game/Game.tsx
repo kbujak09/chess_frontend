@@ -33,10 +33,11 @@ type GameProps = {
   turn: string,
   setTurn: Dispatch<SetStateAction<string>>,
   increment: number,
-  setPlayersTime: (data: PlayersType) => void
+  setPlayersTime: (data: PlayersType) => void,
+  setIsOver: Dispatch<SetStateAction<boolean>>
 }
 
-const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime}: GameProps) => {
+const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime, setIsOver}: GameProps) => {
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {
@@ -93,7 +94,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
     players && <div className={styles.container}>
       {localColor === 'white' ? 
       <>
-        <Player data={players.black} isActive={blackTimerOn}/>
+        <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/>
         <Board 
           pieces={board} 
           setPieces={setBoard} 
@@ -108,11 +109,11 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           increment={increment}
           setPlayersTime={setPlayersTime}
         />
-        <Player data={players.white} isActive={whiteTimerOn}/> 
+        <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/> 
       </>
       :
       <>
-        <Player data={players.white} isActive={whiteTimerOn}/>
+        <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/>
         <Board 
           pieces={board} 
           setPieces={setBoard} 
@@ -128,7 +129,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           increment={increment}
           setPlayersTime={setPlayersTime}
         />
-        <Player data={players.black} isActive={blackTimerOn}/> 
+        <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/> 
       </>
       }
     </div>

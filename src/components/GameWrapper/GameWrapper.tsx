@@ -30,6 +30,7 @@ const GameWrapper = () => {
   const [localColor, setLocalColor] = useState('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [gameStatus, setGameStatus] = useState('');
+  const [isOver, setIsOver] = useState<boolean>(false);
 
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
   const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
@@ -130,6 +131,12 @@ const GameWrapper = () => {
     }
   }, [players.white.id, players.black.id])
 
+  useEffect(() => {
+    if (isOver) {
+      console.log('its over');
+    }
+  }, [isOver]);
+
   return (
     <div className={styles.container}>
       {board && players && localColor && 
@@ -150,6 +157,7 @@ const GameWrapper = () => {
         turn={turn}
         increment={increment}
         setPlayersTime={setPlayersTime}
+        setIsOver={setIsOver}
       />}
     </div>
   );

@@ -3,6 +3,7 @@ import styles from './player.module.scss';
 import ReactLoading from 'react-loading';
 
 import Timer from '../Timer/Times';
+import { Dispatch, SetStateAction } from 'react';
 
 type playerPropsType = {
   data: {
@@ -12,16 +13,17 @@ type playerPropsType = {
     time: number | null,
   },
   isActive: boolean | null,
+  setIsOver: Dispatch<SetStateAction<boolean>>
 }
 
-const Player = ({data, isActive}: playerPropsType) => {
+const Player = ({data, isActive, setIsOver}: playerPropsType) => {
   return (
     <div className={styles.container}>
       <div className={styles.username}>
         {data.username ? data.username : <Search/>}
       </div>
       <div className={styles.timer}>
-        {data.time && <Timer time={data.time} isActive={isActive ? true : false} onTimeout={() => {}}/>}
+        {data.time && <Timer time={data.time} isActive={isActive ? true : false} setIsOver={setIsOver} onTimeout={() => {}}/>}
       </div>
     </div>
   );
