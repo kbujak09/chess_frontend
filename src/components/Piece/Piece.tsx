@@ -10,18 +10,17 @@ type pieceProps = {
 }
 
 const Piece = ({data}: pieceProps) => {
-
   const [resetPiece, setResetPiece] = useState<Boolean>(false); 
   
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `${data.position[0]},${data.position[1]}`,
     data: {
       position: data.position,
-      color: data.color
+      color: data.color,
     }
   })
 
-  const image = getPieceImage({type: data.type, color: data.color})
+  const image = getPieceImage({type: data.type, color: data.color});
 
   useEffect(() => {
     if (!isDragging) {
@@ -37,7 +36,7 @@ const Piece = ({data}: pieceProps) => {
       ref={setNodeRef}
       style={{
         transform: resetPiece ? 'none' : `translate3d(${transform?.x}px, ${transform?.y}px, 0) ${isDragging ? 'scale(1.05)' : ''}`,
-        zIndex: isDragging ? 9999 : 1,
+        zIndex: isDragging ? 100 : 1,
       }}
       {...listeners}
       {...attributes}

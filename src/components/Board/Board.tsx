@@ -37,6 +37,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     end: null
   });
   const [isMoving, setIsMoving] = useState(false);
+  const [droppedPiece, setDroppedPiece] = useState<number[] | null>(null);
 
   const changeTurn = () => {
     if (turn === 'white') {
@@ -51,22 +52,8 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     }
   }
 
-  const movePiece = async (startPos: number[], endPos: number[]) => {
-    const oldPieces: any = pieces;
-    if (pieces) {
-      setIsMoving(true);
-      setPieces(prevPieces => {
-        return prevPieces.map(piece => {
-          if (piece.position[0] === startPos[0] && piece.position[1] === startPos[1]) {
-            return { ...piece, position: endPos };
-          }
-          return piece;
-        });
-      });
-    }
-
-    let req;
-    req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/moves`, {
+  const verifyMove = async (startPos: number[], endPos: number[]) => {
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/moves`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -81,6 +68,27 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
 
     const data = await req.json();
 
+    return data;
+  }
+
+  const movePieceDOM = (startPos: number[], endPos: number[]) => {
+    setPieces(prevPieces => {
+      return prevPieces
+        .filter(piece => !(piece.position[0] === endPos[0] && piece.position[1] === endPos[1]))
+        .map(piece => {
+          if (piece.position[0] === startPos[0] && piece.position[1] === startPos[1]) {
+            return { ...piece, position: endPos };
+          }
+          return piece;
+        });
+    });
+  };
+
+  const movePiece = async (startPos: number[], endPos: number[]) => {
+    const oldPieces: any = pieces;
+
+    const data: any = await verifyMove(startPos, endPos);
+
     if (data.status) {
       setPieces(data.board);
       changeTurn();
@@ -91,10 +99,6 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       setPieces(oldPieces);
     }
 
-    setIsMoving(false);
-
-    console.log(data)
-
     return {
       'status': data.status, 
       'sound': data.type ? data.type : 'enemyMove', 
@@ -103,7 +107,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
         'black': data.players.black.time
       }
     };
-  } 
+  }
 
   const renderBoard = (data: pieceDataType[]) => {
     const boardElements = [];
@@ -115,8 +119,8 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
           const piece = data.find(item => `${item.position[0]},${item.position[1]}` === position);
     
           boardElements.push(
-            <Square key={`${x},${y}`} x={x} y={y} movePiece={movePiece}>
-              {piece ? <Piece data={piece}/> : null}
+            <Square key={`${x},${y}`} x={x} y={y}>
+              {piece ? <Piece data={piece} /> : null}
             </Square>
           );
         }
@@ -130,8 +134,8 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
         const piece = data.find(item => `${item.position[0]},${item.position[1]}` === position);
   
         boardElements.push(
-          <Square key={`${x},${y}`} x={x} y={y} movePiece={movePiece}>
-            {piece ? <Piece data={piece}/> : null}
+          <Square key={`${x},${y}`} x={x} y={y}>
+            {piece ? <Piece data={piece} /> : null}
           </Square>
         );
       }
@@ -155,7 +159,8 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     if (over) {
       const start = active.data.current.position;
       const end = over.data.current.position;
-      if (start[0] === end[0] && start[1] === end[1]) return;
+      if (start[0] === end[0] && start[1] === end[1]) return; 
+      movePieceDOM(start,end);
       const move = await movePiece(start, end);
       if (move.status) {
         playMoveSound(move.sound);
@@ -177,7 +182,6 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
   }
 
   const getEnemyMove = async (data: any) => {
-    console.log(data)
     if (data.userId === localStorage.userId) return;
     setPieces(data.board);
     changeTurn();
@@ -216,6 +220,10 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       socket.off('enemyMoved', getEnemyMove);
     }
   });
+
+  useEffect(() => {
+    console.log('rerender')
+  }, [pieces]);
 
   return (
     <div className={`${styles.container} ${!isActive ? styles.locked : null}`}>

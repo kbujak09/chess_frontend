@@ -5,11 +5,10 @@ import { useDroppable } from '@dnd-kit/core';
 type SquareProps = {
   x: number,
   y: number,
-  movePiece: (startPos: number[], endPos: number[]) => void,
   children: React.ReactNode,
 };
 
-const Square = ({ x, y, movePiece, children }: SquareProps) => {
+const Square = ({ x, y, children }: SquareProps) => {
 
   const { setNodeRef } = useDroppable({
     id: `${x},${y}`,

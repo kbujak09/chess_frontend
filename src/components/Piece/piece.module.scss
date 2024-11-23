@@ -6,6 +6,7 @@
   cursor: pointer;
   position: relative;
   touch-action: none;
+  transition: transform 0.05s ease-out;
 }
 .container:active {
   cursor: grabbing;
@@ -19,4 +20,5 @@
   height: 100%;
   border-radius: 50%;
   touch-action: none;
+  z-index: inherit;
 }
