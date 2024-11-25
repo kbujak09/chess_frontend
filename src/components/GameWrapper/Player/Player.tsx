@@ -23,7 +23,7 @@ const Player = ({data, isActive, setIsOver}: playerPropsType) => {
         {data.username ? data.username : <Search/>}
       </div>
       <div className={styles.timer}>
-        {data.time && <Timer time={data.time} isActive={isActive ? true : false} setIsOver={setIsOver} onTimeout={() => {}}/>}
+        {data.time && <Timer time={Number(data.time.toFixed(0))} isActive={isActive ? true : false} setIsOver={setIsOver} onTimeout={() => {}}/>}
       </div>
     </div>
   );

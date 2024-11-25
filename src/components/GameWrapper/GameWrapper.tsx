@@ -32,6 +32,8 @@ const GameWrapper = () => {
   const [gameStatus, setGameStatus] = useState('');
   const [isOver, setIsOver] = useState<boolean>(false);
 
+  console.log(isOver, gameStatus);
+
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
   const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
 

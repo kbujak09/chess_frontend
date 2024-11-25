@@ -36,8 +36,6 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     start: [],
     end: null
   });
-  const [isMoving, setIsMoving] = useState(false);
-  const [droppedPiece, setDroppedPiece] = useState<number[] | null>(null);
 
   const changeTurn = () => {
     if (turn === 'white') {
@@ -213,6 +211,33 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
         break;
     }
   }
+
+  const syncGame = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}`);
+      if (!res.ok) {
+        throw new Error('Failed to fetch game');
+      }
+      const data: any = await res.json();
+      console.log(data);
+      setPlayersTime(data.players);
+      setPieces(data.board.positions);
+    } catch (error) {
+      console.error('Error syncing timers:', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleFocus = () => {
+      syncGame();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [gameId, setPlayersTime]);
 
   useEffect(() => {
     socket.on('enemyMoved', getEnemyMove);
