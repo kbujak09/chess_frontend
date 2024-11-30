@@ -34,10 +34,11 @@ type GameProps = {
   setTurn: Dispatch<SetStateAction<string>>,
   increment: number,
   setPlayersTime: (data: PlayersType) => void,
-  setIsOver: Dispatch<SetStateAction<boolean>>
+  setIsOver: Dispatch<SetStateAction<boolean>>,
+  isOver: boolean
 }
 
-const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime, setIsOver}: GameProps) => {
+const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime, setIsOver, isOver}: GameProps) => {
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {
@@ -90,6 +91,8 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
     joinRoomRequest();
   }, []);
 
+  console.log(isOver);
+
   return (
     players && <div className={styles.container}>
       {localColor === 'white' ? 
@@ -108,6 +111,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           gameId={gameId}
           increment={increment}
           setPlayersTime={setPlayersTime}
+          setIsOver={setIsOver}
         />
         <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/> 
       </>
@@ -128,6 +132,7 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
           gameId={gameId} 
           increment={increment}
           setPlayersTime={setPlayersTime}
+          setIsOver={setIsOver}
         />
         <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/> 
       </>

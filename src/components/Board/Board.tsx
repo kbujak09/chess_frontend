@@ -28,10 +28,11 @@ type BoardPropsType = {
   setTurn: Dispatch<SetStateAction<string>>,
   gameId: string,
   increment: number,
-  setPlayersTime: (data: PlayersType) => void
+  setPlayersTime: (data: PlayersType) => void,
+  setIsOver: Dispatch<SetStateAction<boolean>>
 }
 
-const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, localColor, isActive, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, gameId, increment, setPlayersTime}: BoardPropsType) => {
+const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, localColor, isActive, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, gameId, increment, setPlayersTime, setIsOver}: BoardPropsType) => {
   const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
     start: [],
     end: null
@@ -92,6 +93,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       changeTurn();
       emitMove(startPos, endPos, data.type, data.gameStatus, data.board, data.players);
       setPlayersTime(data.players)
+      console.log(data);
     } 
     else {
       setPieces(oldPieces);
@@ -185,6 +187,9 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     changeTurn();
     playMoveSound(data.type);
     setPlayersTime(data.players)
+    if (data.status === 'black won' || data.status === 'white won') {
+      setIsOver(true);
+    }
   }
 
   function playMoveSound (type: 'move'|'enemyMove'|'castle'|'take'|'check') {
@@ -219,7 +224,6 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
         throw new Error('Failed to fetch game');
       }
       const data: any = await res.json();
-      console.log(data);
       setPlayersTime(data.players);
       setPieces(data.board.positions);
     } catch (error) {
@@ -232,12 +236,12 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       syncGame();
     };
 
-    window.addEventListener('focus', handleFocus);
+    window.addEventListener('visibilitychange', handleFocus);
 
     return () => {
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('visibilitychange', handleFocus);
     };
-  }, [gameId, setPlayersTime]);
+  }, []);
 
   useEffect(() => {
     socket.on('enemyMoved', getEnemyMove);
@@ -245,10 +249,6 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       socket.off('enemyMoved', getEnemyMove);
     }
   });
-
-  useEffect(() => {
-    console.log('rerender')
-  }, [pieces]);
 
   return (
     <div className={`${styles.container} ${!isActive ? styles.locked : null}`}>

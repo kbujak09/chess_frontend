@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import Game from './Game/Game';
+import GameOver from '../GameOver/GameOver';
 const gameStartAudio = require('../../assets/sounds/game-start.mp3');
 
 type PlayerType = {
@@ -31,8 +32,6 @@ const GameWrapper = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [gameStatus, setGameStatus] = useState('');
   const [isOver, setIsOver] = useState<boolean>(false);
-
-  console.log(isOver, gameStatus);
 
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
   const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
@@ -69,7 +68,6 @@ const GameWrapper = () => {
   }
 
   const setPlayersTime = (data: PlayersType) => {
-    console.log('sync timers')
     setPlayers(prevPlayers => {
       return {
         white: {
@@ -82,6 +80,16 @@ const GameWrapper = () => {
         }
       }
     });
+  }
+
+  const checkIsOver = async (gameId: string) => {
+    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/status`, {
+      method: 'GET'
+    });
+
+    const data = await req.json();
+
+    console.log(data);
   }
 
   // fetch initial data and set states
@@ -135,7 +143,7 @@ const GameWrapper = () => {
 
   useEffect(() => {
     if (isOver) {
-      console.log('its over');
+      checkIsOver(gameId);
     }
   }, [isOver]);
 
@@ -160,7 +168,9 @@ const GameWrapper = () => {
         increment={increment}
         setPlayersTime={setPlayersTime}
         setIsOver={setIsOver}
+        isOver={isOver}
       />}
+      {isOver ? <GameOver/> : null}
     </div>
   );
 };

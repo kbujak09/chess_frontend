@@ -6,7 +6,6 @@
   cursor: pointer;
   position: relative;
   touch-action: none;
-  transition: transform 0.05s ease-out;
 }
 .container:active {
   cursor: grabbing;
