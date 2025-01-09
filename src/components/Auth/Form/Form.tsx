@@ -2,8 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './form.module.scss';
-import { UserContext } from '../../../context/context';
-import useFetch from '../../../hooks/useFetch';
+import { UserContext } from '../../../context/UserContext';
 
 const Form = () => {
 

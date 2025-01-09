@@ -3,7 +3,7 @@ import styles from './game.module.scss';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
 import Player from '../Player/Player';
-import Board from '../../Board/Board';
+import Board from './Board/Board';
 import { socket } from '../../../socket';
 
 type PlayerType = {

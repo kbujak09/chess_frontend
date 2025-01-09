@@ -3,20 +3,11 @@ import styles from './gamewrapper.module.scss';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
+import { PlayersType } from '../../types/types';
+
 import Game from './Game/Game';
-import GameOver from '../GameOver/GameOver';
+import GameOver from './GameOver/GameOver';
 const gameStartAudio = require('../../assets/sounds/game-start.mp3');
-
-type PlayerType = {
-  id: string | null,
-  username: string | null,
-  time: number | null
-};
-
-export type PlayersType = {
-  white: PlayerType,
-  black: PlayerType
-}
 
 const GameWrapper = () => {
   const location = useLocation();
