@@ -3,7 +3,7 @@ import styles from './gamewrapper.module.scss';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { PlayersType } from '../../types/types';
+import { PlayersType, PlayerType } from '../../types/types';
 
 import Game from './Game/Game';
 import GameOver from './GameOver/GameOver';

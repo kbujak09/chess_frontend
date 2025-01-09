@@ -1,8 +1,6 @@
-import { PlayersType } from '../../GameWrapper';
-
 import styles from './board.module.scss';
 import Piece from './Square/Piece/Piece';
-import { pieceDataType } from '../../../../types/types';
+import { pieceDataType, PlayersType } from '../../../../types/types';
 import Square from './Square/Square';
 import { socket } from '../../../../socket';
 

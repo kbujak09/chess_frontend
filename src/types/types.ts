@@ -5,7 +5,7 @@ export type pieceDataType = {
   possible_moves: number[][]
 }
 
-type PlayerType = {
+export type PlayerType = {
   id: string | null,
   username: string | null,
   time: number | null
