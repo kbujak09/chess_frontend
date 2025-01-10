@@ -1,7 +1,9 @@
 import styles from './gamewrapper.module.scss';
 
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+
+import { GameContext } from '../../context/GameContext';
 
 import { PlayersType, PlayerType } from '../../types/types';
 
@@ -14,22 +16,7 @@ const GameWrapper = () => {
 
   const gameId = location.pathname.split('/')[2];
 
-  const [board, setBoard] = useState([]);
-  const [players, setPlayers] = useState<PlayersType>({
-    white: { id: null, username: null, time: null},
-    black: { id: null, username: null, time: null},
-  });
-  const [localColor, setLocalColor] = useState('');
-  const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [gameStatus, setGameStatus] = useState('');
-  const [isOver, setIsOver] = useState<boolean>(false);
-
-  const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
-  const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
-
-  const [increment, setIncrement] = useState<number>(0);
-
-  const [turn, setTurn] = useState<string>('');
+  const { board, setBoard, players, setPlayers, localColor, setLocalColor, gameStarted, setGameStarted, gameStatus, setGameStatus, isOver, setIsOver, whiteTimerOn, setWhiteTimerOn, blackTimerOn, setBlackTimerOn, increment, setIncrement, turn, setTurn } = useContext(GameContext);
 
   const findLocalColor = (players: PlayerType[]) => {
     for (let [key, values] of Object.entries(players)) {
@@ -142,24 +129,8 @@ const GameWrapper = () => {
     <div className={styles.container}>
       {board && players && localColor && 
       <Game 
-        board={board}
-        setBoard={setBoard} 
-        players={players} 
-        localColor={localColor} 
-        setPlayers={setPlayers} 
         gameId={gameId}
-        gameStarted={gameStarted}
-        setGameStarted={setGameStarted}
-        whiteTimerOn={whiteTimerOn}
-        blackTimerOn={blackTimerOn}
-        setWhiteTimerOn={setWhiteTimerOn}
-        setBlackTimerOn={setBlackTimerOn}
-        setTurn={setTurn}
-        turn={turn}
-        increment={increment}
         setPlayersTime={setPlayersTime}
-        setIsOver={setIsOver}
-        isOver={isOver}
       />}
       {isOver ? <GameOver/> : null}
     </div>

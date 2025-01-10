@@ -1,11 +1,12 @@
+import { useState, Dispatch, SetStateAction, useEffect, useContext } from 'react';
+import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
+
 import styles from './board.module.scss';
 import Piece from './Square/Piece/Piece';
-import { pieceDataType, PlayersType } from '../../../../types/types';
+import { PieceDataType, PlayersType } from '../../../../types/types';
 import Square from './Square/Square';
 import { socket } from '../../../../socket';
-
-import { useState, Dispatch, SetStateAction, useEffect } from 'react';
-import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
+import { GameContext } from '../../../../context/GameContext';
 
 const moveSelfSound = require('../../../../assets/sounds/move-self.mp3');
 const moveEnemySound = require('../../../../assets/sounds/move-opponent.mp3');
@@ -14,23 +15,16 @@ const castleSound = require('../../../../assets/sounds/castle.mp3');
 const checkSound = require('../../../../assets/sounds/move-check.mp3');
 
 type BoardPropsType = {
-  pieces?: pieceDataType[], 
-  setPieces: Dispatch<SetStateAction<pieceDataType[]>>
   isReversed?: boolean, 
   isDraggable?: boolean, 
-  localColor: string, 
   isActive: boolean,
-  setBlackTimerOn: Dispatch<SetStateAction<boolean>>,
-  setWhiteTimerOn: Dispatch<SetStateAction<boolean>>,
-  turn: string,
-  setTurn: Dispatch<SetStateAction<string>>,
   gameId: string,
-  increment: number,
   setPlayersTime: (data: PlayersType) => void,
-  setIsOver: Dispatch<SetStateAction<boolean>>
 }
 
-const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, localColor, isActive, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, gameId, increment, setPlayersTime, setIsOver}: BoardPropsType) => {
+const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPlayersTime}: BoardPropsType) => {
+  const { board, setBoard, localColor, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, increment, setIsOver } = useContext(GameContext);
+
   const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
     start: [],
     end: null
@@ -69,7 +63,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
   }
 
   const movePieceDOM = (startPos: number[], endPos: number[]) => {
-    setPieces(prevPieces => {
+    setBoard(prevPieces => {
       return prevPieces
         .filter(piece => !(piece.position[0] === endPos[0] && piece.position[1] === endPos[1]))
         .map(piece => {
@@ -82,19 +76,19 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
   };
 
   const movePiece = async (startPos: number[], endPos: number[]) => {
-    const oldPieces: any = pieces;
+    const oldPieces: any = board;
 
     const data: any = await verifyMove(startPos, endPos);
 
     if (data.status) {
-      setPieces(data.board);
+      setBoard(data.board);
       changeTurn();
       emitMove(startPos, endPos, data.type, data.gameStatus, data.board, data.players);
       setPlayersTime(data.players)
       console.log(data);
     } 
     else {
-      setPieces(oldPieces);
+      setBoard(oldPieces);
     }
 
     return {
@@ -107,7 +101,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     };
   }
 
-  const renderBoard = (data: pieceDataType[]) => {
+  const renderBoard = (data: PieceDataType[]) => {
     const boardElements = [];
 
     if (isReversed) {
@@ -166,7 +160,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
     } 
   };
 
-  const emitMove = (startPos: number[], endPos: number[], type: string, gameStatus: string, pieces: pieceDataType[] | undefined, players: PlayersType) => {
+  const emitMove = (startPos: number[], endPos: number[], type: string, gameStatus: string, pieces: PieceDataType[] | undefined, players: PlayersType) => {
     const data = {
       position: {start: startPos, end: endPos},
       userId: localStorage.userId, 
@@ -181,7 +175,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
 
   const getEnemyMove = async (data: any) => {
     if (data.userId === localStorage.userId) return;
-    setPieces(data.board);
+    setBoard(data.board);
     changeTurn();
     playMoveSound(data.type);
     setPlayersTime(data.players)
@@ -223,7 +217,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
       }
       const data: any = await res.json();
       setPlayersTime(data.players);
-      setPieces(data.board.positions);
+      setBoard(data.board.positions);
     } catch (error) {
       console.error('Error syncing timers:', error);
     }
@@ -251,7 +245,7 @@ const Board = ({pieces, setPieces, isReversed = false, isDraggable = true, local
   return (
     <div className={`${styles.container} ${!isActive ? styles.locked : null}`}>
       <DndContext collisionDetection={closestCenter} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-        {pieces ? renderBoard(pieces) : null}
+        {board ? renderBoard(board) : null}
       </DndContext> 
     </div>
   )

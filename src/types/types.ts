@@ -1,9 +1,11 @@
-export type pieceDataType = {
+export type PieceDataType = {
   color: string,
   type: string,
   position: number[],
   possible_moves: number[][]
 }
+
+export type BoardDataType = PieceDataType[] | [];
 
 export type PlayerType = {
   id: string | null,

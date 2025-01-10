@@ -1,14 +1,14 @@
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
-import { PlayersType } from "../types/types";
+import { BoardDataType, PieceDataType, PlayersType } from "../types/types";
 
 type Children = {
   children: JSX.Element
 }
 
 type GameContextType = {
-  board: any, 
-  setBoard: Dispatch<SetStateAction<any>>, 
+  board: PieceDataType[], 
+  setBoard: Dispatch<SetStateAction<PieceDataType[]>>, 
   players: PlayersType, 
   setPlayers: Dispatch<SetStateAction<PlayersType>>, 
   localColor: string, 
@@ -29,21 +29,53 @@ type GameContextType = {
   setTurn: Dispatch<SetStateAction<string>>
 }
 
+const defaultPlayers: PlayersType = {
+  white: {
+    'id': '',
+    'username': '',
+    'time': 0
+  },
+  black: {
+    'id': '',
+    'username': '',
+    'time': 0
+  }
+}
+
 const defaultValue = {
-  test: ''
+  board: [], 
+  setBoard: () => {}, 
+  players: defaultPlayers, 
+  setPlayers: () => {}, 
+  localColor: '', 
+  setLocalColor: () => {},
+  gameStarted: false,
+  setGameStarted: () => {},
+  gameStatus: '',
+  setGameStatus: () => {},
+  isOver: false,
+  setIsOver: () => {},
+  whiteTimerOn: false,
+  setWhiteTimerOn: () => {},
+  blackTimerOn: false,
+  setBlackTimerOn: () => {},
+  increment: 0,
+  setIncrement: () => {},
+  turn: '',
+  setTurn: () => {}
 }
 
 export const GameContext = createContext<GameContextType>(defaultValue);
 
 const GameContextProvider = ({children}: Children) => {
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState<BoardDataType>([]);
   const [players, setPlayers] = useState<PlayersType>({
     white: { id: null, username: null, time: null},
     black: { id: null, username: null, time: null},
   });
-  const [localColor, setLocalColor] = useState('');
+  const [localColor, setLocalColor] = useState<string>('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [gameStatus, setGameStatus] = useState('');
+  const [gameStatus, setGameStatus] = useState<string>('');
   const [isOver, setIsOver] = useState<boolean>(false);
   
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);

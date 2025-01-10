@@ -1,12 +1,12 @@
 import styles from './piece.module.scss';
 import { getPieceImage } from '../../../../../../utils/utils';
-import { pieceDataType } from '../../../../../../types/types';
+import { PieceDataType } from '../../../../../../types/types';
 
 import { useDraggable } from '@dnd-kit/core';
 import { useEffect, useState } from 'react';
 
 type pieceProps = {
-  data: pieceDataType,
+  data: PieceDataType,
 }
 
 const Piece = ({data}: pieceProps) => {

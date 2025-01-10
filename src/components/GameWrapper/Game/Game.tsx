@@ -1,10 +1,11 @@
 import styles from './game.module.scss';
 
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 
 import Player from '../Player/Player';
 import Board from './Board/Board';
 import { socket } from '../../../socket';
+import { GameContext } from '../../../context/GameContext';
 
 type PlayerType = {
   id: string | null,
@@ -18,27 +19,13 @@ type PlayersType = {
 }
 
 type GameProps = {
-  board: any[],
-  setBoard: Dispatch<SetStateAction<any>>
-  players: PlayersType,
-  localColor: string,
-  setPlayers: Dispatch<SetStateAction<PlayersType>>,
   gameId: string,
-  gameStarted: boolean,
-  setGameStarted: Dispatch<SetStateAction<boolean>>,
-  whiteTimerOn: boolean,
-  blackTimerOn: boolean,
-  setWhiteTimerOn: Dispatch<SetStateAction<boolean>>,
-  setBlackTimerOn: Dispatch<SetStateAction<boolean>>,
-  turn: string,
-  setTurn: Dispatch<SetStateAction<string>>,
-  increment: number,
   setPlayersTime: (data: PlayersType) => void,
-  setIsOver: Dispatch<SetStateAction<boolean>>,
-  isOver: boolean
 }
 
-const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setPlayersTime, setIsOver, isOver}: GameProps) => {
+const Game = ({gameId, setPlayersTime}: GameProps) => {
+
+  const { board, setBoard, players, localColor, setPlayers, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setIsOver, isOver } = useContext(GameContext);
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {
@@ -99,19 +86,10 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
       <>
         <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/>
         <Board 
-          pieces={board} 
-          setPieces={setBoard} 
-          localColor={localColor} 
           isDraggable={gameStarted && turn === 'white' ? true : false} 
           isActive={gameStarted ? true : false} 
-          setWhiteTimerOn={setWhiteTimerOn}
-          setBlackTimerOn={setBlackTimerOn}
-          turn={turn}  
-          setTurn={setTurn}
           gameId={gameId}
-          increment={increment}
           setPlayersTime={setPlayersTime}
-          setIsOver={setIsOver}
         />
         <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/> 
       </>
@@ -119,20 +97,10 @@ const Game = ({board, setBoard, players, localColor, setPlayers, gameId, gameSta
       <>
         <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/>
         <Board 
-          pieces={board} 
-          setPieces={setBoard} 
-          localColor={localColor} 
-          isReversed={true} 
-          isDraggable={gameStarted && turn === 'black' ? true : false} 
-          isActive={gameStarted ? true : false}
-          setWhiteTimerOn={setWhiteTimerOn}
-          setBlackTimerOn={setBlackTimerOn}
-          turn={turn}
-          setTurn={setTurn} 
-          gameId={gameId} 
-          increment={increment}
+          isDraggable={gameStarted && turn === 'white' ? true : false} 
+          isActive={gameStarted ? true : false} 
+          gameId={gameId}
           setPlayersTime={setPlayersTime}
-          setIsOver={setIsOver}
         />
         <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/> 
       </>
