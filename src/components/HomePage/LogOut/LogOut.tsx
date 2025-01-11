@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { UserContext } from "../../../../context/UserContext";
+import { UserContext } from "../../../context/UserContext";
 
-import icon from '../../../../assets/logout.svg';
+import icon from '../../../assets/logout.svg';
 
 const LogOut = () => {
   const { setUser } = useContext(UserContext)

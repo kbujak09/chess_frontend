@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import styles from './greeting.module.scss';
-import LogOut from './LogOut/LogOut';
+import LogOut from '../LogOut/LogOut';
 import { UserContext } from '../../../context/UserContext';
 
 const Greeting = () => {

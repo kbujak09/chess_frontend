@@ -1,6 +1,6 @@
 import styles from './piece.module.scss';
-import { getPieceImage } from '../../../../../../utils/utils';
-import { PieceDataType } from '../../../../../../types/types';
+import { getPieceImage } from '../../../utils/utils';
+import { PieceDataType } from '../../../types/types';
 
 import { useDraggable } from '@dnd-kit/core';
 import { useEffect, useState } from 'react';

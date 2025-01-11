@@ -1,4 +1,4 @@
-import GameCreator from './GameCreator/GameCreator';
+import GameCreator from '../GameCreator/GameCreator';
 
 import styles from './creators.module.scss'
 

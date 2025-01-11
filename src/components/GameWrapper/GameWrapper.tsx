@@ -1,7 +1,7 @@
 import styles from './gamewrapper.module.scss';
 
 import { useLocation } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { GameContext } from '../../context/GameContext';
 
@@ -132,7 +132,7 @@ const GameWrapper = () => {
         gameId={gameId}
         setPlayersTime={setPlayersTime}
       />}
-      {isOver ? <GameOver/> : null}
+      {/* {isOver ? <GameOver/> : null} */}
     </div>
   );
 };

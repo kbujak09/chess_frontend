@@ -3,7 +3,7 @@ import styles from './game.module.scss';
 import { useEffect, useContext } from 'react';
 
 import Player from '../Player/Player';
-import Board from './Board/Board';
+import Board from '../Board/Board';
 import { socket } from '../../../socket';
 import { GameContext } from '../../../context/GameContext';
 
@@ -25,7 +25,7 @@ type GameProps = {
 
 const Game = ({gameId, setPlayersTime}: GameProps) => {
 
-  const { board, setBoard, players, localColor, setPlayers, gameStarted, setGameStarted, whiteTimerOn, blackTimerOn, setBlackTimerOn, setWhiteTimerOn, setTurn, turn, increment, setIsOver, isOver } = useContext(GameContext);
+  const { players, localColor, setPlayers, gameStarted, whiteTimerOn, blackTimerOn, turn, setIsOver } = useContext(GameContext);
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {
@@ -78,30 +78,29 @@ const Game = ({gameId, setPlayersTime}: GameProps) => {
     joinRoomRequest();
   }, []);
 
-  console.log(isOver);
-
   return (
     players && <div className={styles.container}>
       {localColor === 'white' ? 
       <>
         <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/>
-        <Board 
-          isDraggable={gameStarted && turn === 'white' ? true : false} 
-          isActive={gameStarted ? true : false} 
-          gameId={gameId}
-          setPlayersTime={setPlayersTime}
-        />
+          <Board 
+            isDraggable={gameStarted && turn === 'white' ? true : false} 
+            isActive={gameStarted ? true : false} 
+            gameId={gameId}
+            setPlayersTime={setPlayersTime}
+          />
         <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/> 
       </>
       :
       <>
         <Player data={players.white} isActive={whiteTimerOn} setIsOver={setIsOver}/>
-        <Board 
-          isDraggable={gameStarted && turn === 'white' ? true : false} 
-          isActive={gameStarted ? true : false} 
-          gameId={gameId}
-          setPlayersTime={setPlayersTime}
-        />
+          <Board 
+            isDraggable={gameStarted && turn === 'black' ? true : false} 
+            isActive={gameStarted ? true : false} 
+            gameId={gameId}
+            setPlayersTime={setPlayersTime}
+            isReversed={true}
+          />
         <Player data={players.black} isActive={blackTimerOn} setIsOver={setIsOver}/> 
       </>
       }

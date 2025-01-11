@@ -2,7 +2,7 @@ import styles from './player.module.scss';
 
 import ReactLoading from 'react-loading';
 
-import Timer from './Timer/Times';
+import Timer from '../Timer/Timer';
 import { Dispatch, SetStateAction } from 'react';
 
 type playerPropsType = {

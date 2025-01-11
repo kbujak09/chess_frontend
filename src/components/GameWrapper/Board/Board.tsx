@@ -2,17 +2,17 @@ import { useState, Dispatch, SetStateAction, useEffect, useContext } from 'react
 import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
 import styles from './board.module.scss';
-import Piece from './Square/Piece/Piece';
-import { PieceDataType, PlayersType } from '../../../../types/types';
-import Square from './Square/Square';
-import { socket } from '../../../../socket';
-import { GameContext } from '../../../../context/GameContext';
+import Piece from '../Piece/Piece';
+import { PieceDataType, PlayersType } from '../../../types/types';
+import Square from '../Square/Square';
+import { socket } from '../../../socket';
+import { GameContext } from '../../../context/GameContext';
 
-const moveSelfSound = require('../../../../assets/sounds/move-self.mp3');
-const moveEnemySound = require('../../../../assets/sounds/move-opponent.mp3');
-const takeSound = require('../../../../assets/sounds/capture.mp3');
-const castleSound = require('../../../../assets/sounds/castle.mp3');
-const checkSound = require('../../../../assets/sounds/move-check.mp3');
+const moveSelfSound = require('../../../assets/sounds/move-self.mp3');
+const moveEnemySound = require('../../../assets/sounds/move-opponent.mp3');
+const takeSound = require('../../../assets/sounds/capture.mp3');
+const castleSound = require('../../../assets/sounds/castle.mp3');
+const checkSound = require('../../../assets/sounds/move-check.mp3');
 
 type BoardPropsType = {
   isReversed?: boolean, 

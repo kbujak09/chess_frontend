@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './gamecreator.module.scss';
-import { UserContext } from '../../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 
 type gameCreatorPropsType = {
   minutes: number,
