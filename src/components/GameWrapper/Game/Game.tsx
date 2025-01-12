@@ -25,7 +25,16 @@ type GameProps = {
 
 const Game = ({gameId, setPlayersTime}: GameProps) => {
 
-  const { players, localColor, setPlayers, gameStarted, whiteTimerOn, blackTimerOn, turn, setIsOver } = useContext(GameContext);
+  const { 
+    players, 
+    localColor, 
+    setPlayers, 
+    gameStarted, 
+    whiteTimerOn, 
+    blackTimerOn, 
+    turn, 
+    setIsOver 
+  } = useContext(GameContext);
   
   function handlePlayerJoined(data: PlayerType) {
     setPlayers((prevPlayers: any) => {

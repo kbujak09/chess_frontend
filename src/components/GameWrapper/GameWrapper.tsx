@@ -8,7 +8,7 @@ import { GameContext } from '../../context/GameContext';
 import { PlayersType, PlayerType } from '../../types/types';
 
 import Game from './Game/Game';
-import GameOver from './GameOver/GameOver';
+// import GameOver from './GameOver/GameOver';
 const gameStartAudio = require('../../assets/sounds/game-start.mp3');
 
 const GameWrapper = () => {
@@ -16,7 +16,23 @@ const GameWrapper = () => {
 
   const gameId = location.pathname.split('/')[2];
 
-  const { board, setBoard, players, setPlayers, localColor, setLocalColor, gameStarted, setGameStarted, gameStatus, setGameStatus, isOver, setIsOver, whiteTimerOn, setWhiteTimerOn, blackTimerOn, setBlackTimerOn, increment, setIncrement, turn, setTurn } = useContext(GameContext);
+  const { 
+    board, 
+    setBoard, 
+    players, 
+    setPlayers, 
+    localColor, 
+    setLocalColor, 
+    setGameStarted, 
+    gameStatus, 
+    setGameStatus, 
+    isOver, 
+    setWhiteTimerOn, 
+    setBlackTimerOn, 
+    setIncrement, 
+    turn, 
+    setTurn 
+  } = useContext(GameContext);
 
   const findLocalColor = (players: PlayerType[]) => {
     for (let [key, values] of Object.entries(players)) {

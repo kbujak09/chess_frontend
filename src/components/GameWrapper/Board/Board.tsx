@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-kit/core';
 
 import styles from './board.module.scss';
@@ -23,12 +23,20 @@ type BoardPropsType = {
 }
 
 const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPlayersTime}: BoardPropsType) => {
-  const { board, setBoard, localColor, setWhiteTimerOn, setBlackTimerOn, turn, setTurn, increment, setIsOver } = useContext(GameContext);
+  const { 
+    board, 
+    setBoard, 
+    localColor, 
+    setWhiteTimerOn, 
+    setBlackTimerOn, 
+    turn, 
+    setTurn, 
+    setIsOver } = useContext(GameContext);
 
-  const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
-    start: [],
-    end: null
-  });
+  // const [draggedPiece, setDraggedPiece] = useState<{start: number[], end: number[] | null}>({
+  //   start: [],
+  //   end: null
+  // });
 
   const changeTurn = () => {
     if (turn === 'white') {
@@ -85,7 +93,6 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
       changeTurn();
       emitMove(startPos, endPos, data.type, data.gameStatus, data.board, data.players);
       setPlayersTime(data.players)
-      console.log(data);
     } 
     else {
       setBoard(oldPieces);
@@ -138,22 +145,32 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
 
   const onDragStart = (event: DragStartEvent) => {
     if (!isDraggable || !isActive) return;
+
     const { active }: any = event;
     const pieceColor = active.data.current.color
+
     if (localColor !== pieceColor) return;
-    setDraggedPiece({ start: active.data.current.position, end: null });
+
+    // setDraggedPiece({ start: active.data.current.position, end: null });
   }
   const onDragEnd = async (event: DragEndEvent) => {
     if (!isDraggable) return;
+
     const { active, over }: {active: any, over: any} = event;
     const pieceColor = active.data.current.color
+
     if (localColor !== pieceColor) return;
+
     if (over) {
       const start = active.data.current.position;
       const end = over.data.current.position;
+
       if (start[0] === end[0] && start[1] === end[1]) return; 
+
       movePieceDOM(start,end);
+
       const move = await movePiece(start, end);
+    
       if (move.status) {
         playMoveSound(move.sound);
       }
@@ -178,7 +195,8 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
     setBoard(data.board);
     changeTurn();
     playMoveSound(data.type);
-    setPlayersTime(data.players)
+    setPlayersTime(data.players);
+
     if (data.status === 'black won' || data.status === 'white won') {
       setIsOver(true);
     }
@@ -212,12 +230,16 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
   const syncGame = async () => {
     try {
       const res = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}`);
+
       if (!res.ok) {
         throw new Error('Failed to fetch game');
       }
+
       const data: any = await res.json();
+
       setPlayersTime(data.players);
       setBoard(data.board.positions);
+
     } catch (error) {
       console.error('Error syncing timers:', error);
     }
