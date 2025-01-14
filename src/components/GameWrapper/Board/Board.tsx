@@ -3,7 +3,7 @@ import { DndContext, DragEndEvent, DragStartEvent, closestCenter } from '@dnd-ki
 
 import styles from './board.module.scss';
 import Piece from '../Piece/Piece';
-import { PieceDataType, PlayersType } from '../../../types/types';
+import { BoardDataType, PieceDataType, PlayersType } from '../../../types/types';
 import Square from '../Square/Square';
 import { socket } from '../../../socket';
 import { GameContext } from '../../../context/GameContext';
@@ -108,7 +108,7 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
     };
   }
 
-  const renderBoard = (data: PieceDataType[]) => {
+  const renderBoard = (data: BoardDataType) => {
     const boardElements = [];
 
     if (isReversed) {
@@ -153,6 +153,7 @@ const Board = ({ isReversed = false, isDraggable = true, isActive, gameId, setPl
 
     // setDraggedPiece({ start: active.data.current.position, end: null });
   }
+  
   const onDragEnd = async (event: DragEndEvent) => {
     if (!isDraggable) return;
 

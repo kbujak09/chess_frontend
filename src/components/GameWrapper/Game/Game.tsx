@@ -19,11 +19,10 @@ type PlayersType = {
 }
 
 type GameProps = {
-  gameId: string,
   setPlayersTime: (data: PlayersType) => void,
 }
 
-const Game = ({gameId, setPlayersTime}: GameProps) => {
+const Game = ({setPlayersTime}: GameProps) => {
 
   const { 
     players, 
@@ -33,7 +32,8 @@ const Game = ({gameId, setPlayersTime}: GameProps) => {
     whiteTimerOn, 
     blackTimerOn, 
     turn, 
-    setIsOver 
+    setIsOver,
+    gameId
   } = useContext(GameContext);
   
   function handlePlayerJoined(data: PlayerType) {

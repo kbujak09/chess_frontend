@@ -26,7 +26,9 @@ type GameContextType = {
   increment: number,
   setIncrement: Dispatch<SetStateAction<number>>,
   turn: string,
-  setTurn: Dispatch<SetStateAction<string>>
+  setTurn: Dispatch<SetStateAction<string>>,
+  gameId: string,
+  setGameId: Dispatch<SetStateAction<string>>
 }
 
 const defaultPlayers: PlayersType = {
@@ -62,7 +64,9 @@ const defaultValue = {
   increment: 0,
   setIncrement: () => {},
   turn: '',
-  setTurn: () => {}
+  setTurn: () => {},
+  gameId: '',
+  setGameId: () => {}
 }
 
 export const GameContext = createContext<GameContextType>(defaultValue);
@@ -77,13 +81,11 @@ const GameContextProvider = ({children}: Children) => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [gameStatus, setGameStatus] = useState<string>('');
   const [isOver, setIsOver] = useState<boolean>(false);
-  
   const [whiteTimerOn, setWhiteTimerOn] = useState<boolean>(false);
   const [blackTimerOn, setBlackTimerOn] = useState<boolean>(false);
-  
   const [increment, setIncrement] = useState<number>(0);
-  
   const [turn, setTurn] = useState<string>('');
+  const [gameId, setGameId] = useState<string>('');
 
   return (
     <GameContext.Provider value={{
@@ -106,7 +108,9 @@ const GameContextProvider = ({children}: Children) => {
       increment,
       setIncrement,
       turn,
-      setTurn
+      setTurn,
+      gameId,
+      setGameId
     }}>
       {children}
     </GameContext.Provider>

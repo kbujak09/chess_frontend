@@ -11,6 +11,16 @@ import Game from './Game/Game';
 // import GameOver from './GameOver/GameOver';
 const gameStartAudio = require('../../assets/sounds/game-start.mp3');
 
+const checkIsOver = async (gameId: string) => {
+  const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/status`, {
+    method: 'GET'
+  });
+
+  const data = await req.json();
+
+  console.log(data);
+}
+
 const GameWrapper = () => {
   const location = useLocation();
 
@@ -31,7 +41,8 @@ const GameWrapper = () => {
     setBlackTimerOn, 
     setIncrement, 
     turn, 
-    setTurn 
+    setTurn,
+    setGameId
   } = useContext(GameContext);
 
   const findLocalColor = (players: PlayerType[]) => {
@@ -76,15 +87,9 @@ const GameWrapper = () => {
     });
   }
 
-  const checkIsOver = async (gameId: string) => {
-    const req = await fetch(`${process.env.REACT_APP_API_IP}/api/games/${gameId}/status`, {
-      method: 'GET'
-    });
-
-    const data = await req.json();
-
-    console.log(data);
-  }
+  useEffect(() => {
+    setGameId(gameId);
+  }, [location.pathname]);
 
   // fetch initial data and set states
   useEffect(() => {
@@ -113,7 +118,6 @@ const GameWrapper = () => {
       console.error(err);
     }
   }, []);
-
 
   // start the game when both players join
   useEffect(() => {
@@ -144,13 +148,14 @@ const GameWrapper = () => {
   return (
     <div className={styles.container}>
       {board && players && localColor && 
-      <Game 
-        gameId={gameId}
+      <Game
         setPlayersTime={setPlayersTime}
       />}
       {/* {isOver ? <GameOver/> : null} */}
     </div>
   );
 };
+
+export { checkIsOver };
 
 export default GameWrapper;

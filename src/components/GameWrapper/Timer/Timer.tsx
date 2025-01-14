@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { formatTime } from '../../../utils/utils';
 
 import styles from './timer.module.scss';
 
@@ -46,12 +47,6 @@ const Timer = ({ time, isActive, onTimeout, setIsOver }: timerPropsType) => {
       }
     };
   }, [isActive, onTimeout ]);
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  }
 
   return (
     <div className={styles.container}>

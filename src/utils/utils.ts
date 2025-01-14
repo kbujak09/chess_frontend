@@ -11,7 +11,7 @@ import queen_w from '../../src/assets/pieces/queen-w.svg';
 import rook_b from '../../src/assets/pieces/rook-b.svg';
 import rook_w from '../../src/assets/pieces/rook-w.svg';
 
-const getPieceImage = ({type, color}: {type: string, color: string}): string => {
+ const getPieceImage = ({type, color}: {type: string, color: string}): string => {
   switch (type) {
     case 'bishop':
       return color === 'black' ? bishop_b : bishop_w;
@@ -30,4 +30,10 @@ const getPieceImage = ({type, color}: {type: string, color: string}): string => 
   }
 };
 
-export { getPieceImage }
+ const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
+export { getPieceImage, formatTime };
